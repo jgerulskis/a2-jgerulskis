@@ -65,14 +65,13 @@ const FormValidation = {
             method:'POST',
             body
         }).then( function( response ) {
-            console.log("FIRE");
-            console.log(response.body);
+            const eventURL = "/viewEvent.html?" + json.eventID
+            window.location.replace(eventURL);
         });
-
-        return false;
     },
     buildEventJSON: function() {
         const eventJSON = {
+            "eventID": FormHandler.generateID(),
             "eventName": document.getElementById("eventName").value,
             "potentialDates": document.getElementById("dateRange").value,
             "startTime": document.getElementById("startTime").value,
@@ -85,7 +84,7 @@ const FormValidation = {
 };
 
 const FormHandler = {
-    viewJustCreatedEvent() {
-        console.log("Fire!");
+    generateID: function() { // Really should improve this to use UUID
+        return Math.floor(Math.random() * 100001);
     }
 }

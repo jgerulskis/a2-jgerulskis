@@ -18,7 +18,7 @@ input[type=text].eventCreationField {
 }
 
 input[type=text].eventCreationField::placeholder {
-    color: #c9c9c9;
+    color: aqua;
 }
 
 button.submit {
@@ -50,14 +50,14 @@ button.submit {
 }
 
 a.nav-link {
-    color: #61feba !important;
+    color: aqua !important;
     font-weight: bold;
     font-size: 25px;
     margin-left: 10px;
 }
 
 a.nav-link:hover {
-    color:green !important;
+    color:#87ceeb !important;
 }
 
 .navbarLogo {
@@ -68,9 +68,9 @@ a.nav-link:hover {
 /*Index.html banner logo*/
 .bannerLogo {
     margin: 40px;
-    width: 20%;
+    width: 40%;
     height: auto;
-    margin-left: 40%;
+    margin-left: 30%;
     position: relative;
 }
 
@@ -79,7 +79,7 @@ body {
     margin: 0;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-image: linear-gradient(#61feba, green);
+    background-image: linear-gradient(aqua, blue);
 }
 
 /* Event Viewer */
@@ -105,7 +105,7 @@ tr {
 }
 
 td:hover {
-    background-color: #61feba !important;
+    background-color: grey !important;
 }
 
 .eventName {

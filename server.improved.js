@@ -34,20 +34,14 @@ const handlePost = function( request, response ) {
   request.on( 'end', function() {
     console.log("Server received\n" + dataString);
     const obj = JSON.parse(dataString);
-    let url;
 
     if (obj.type != null && obj.type === "update") {
       FileManager.updateEventAvailibilty(obj.eventID, obj.availability, obj.name);
     }
     else if (PostValidation.validate(obj)) {
-      url = FileManager.saveJSON(obj)
+      FileManager.saveJSON(obj)
     }
-    console.log(url);
-    if (url !== undefined) {
-      response.body = { "eventURL": "/viewEvent.html?" + url};
-      console.log(response.body.eventURL + " is your response URL");
-    } 
-    response.writeHead( 200, "OK", {'Content-Type': 'text/plain' })
+    response.writeHead( 200, "OK", {'Content-Type': 'text/plain'})
 
     response.end()
   })
@@ -113,7 +107,7 @@ const PostValidation = {
 
 const FileManager = {
   saveJSON: function(jsonFile) {
-    const eventHash = "exampleEvent3"; // TODO: SWITCH this
+    const eventHash = jsonFile.eventID;
     jsonFile.potentialDates = this.converDayRangeToArray(jsonFile.potentialDates); 
     fs.writeFile('./public/events/' + eventHash + '.json', JSON.stringify(jsonFile), function (err) {
       if (err) throw err;
@@ -129,31 +123,28 @@ const FileManager = {
 
     dates.push(currDate.clone().toDate());
     while(currDate.add(1, 'days').diff(lastDate) <= 0) {
-        console.log(currDate.toDate());
         dates.push(currDate.clone().toDate());
     }
 
     return dates;
   },
   updateEventAvailibilty: function(eventID, availability, name){
-    console.log("Loading >>> " + "./public/events/" + eventID + ".json");
+    console.log("Updating  " + "./public/events/" + eventID + ".json" + " participants availabilty");
     let jsonFile = fs.readFileSync("./public/events/" + eventID + ".json", {encoding: "utf-8"}, function (err) {
       if (err) throw err;
     });
     const event = JSON.parse(jsonFile);
 
-    console.log("The event name is " + event.eventName);
     event.participants.push({
       "name": name,
       "availability": availability
     });
+
     console.log(event.participants);
     const newJsonFile = JSON.stringify(event)
-    console.log("Saving as " + newJsonFile);
     fs.writeFile('./public/events/' + eventID+ '.json',newJsonFile, function (err) {
       if (err) throw err;
     });
-    console.log('Event updated at to ' + './public/events/' + eventID + ".json");
   }
 }
 

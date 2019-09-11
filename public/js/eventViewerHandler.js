@@ -4,7 +4,9 @@ const TableManager = {
         const parsedEventDetails = JSON.parse(eventDetails);
         const eventTable = document.getElementById("eventTable");
         const eventName = document.getElementById("eventName");
+        const eventURL = document.getElementById("eventURL");
         eventName.innerHTML = parsedEventDetails.eventName;
+        eventURL.innerHTML = "Share this ( <b>" + window.location.href + "</b> ) link with your group to plan";
         const HOURS = parsedEventDetails.endTime - parsedEventDetails.startTime;
         const DAYS = parsedEventDetails.potentialDates; 
         // Create Table header
@@ -41,16 +43,17 @@ const TableManager = {
         for (let i = 1; i < row.length; i++) {
             for (let j = 0; j < row[i].cells.length; j++) {
                 row[i].cells[j].addEventListener('click', function () {
-                    if (this.style.backgroundColor == "green") {
+                    if (this.style.backgroundColor == "blue") {
                         this.style.backgroundColor = "";
+                        this.style.color = "black";
                         for (let x = 0; x < availability.length; x++) {
                             if (availability[x][0] === i && availability[x][1] === j) {
-
                                 availability.splice(x, 1);
                             }
                         }
                     } else {
-                        this.style.backgroundColor = "green";
+                        this.style.backgroundColor = "blue";
+                        this.style.color = "white";
                         availability.push([i, j]);
                     }
                 });
@@ -126,6 +129,7 @@ const EventDetails = {
             body
         }).then ( function (response) {
             console.log(response);
+            location.reload();
         });
     }
 }
