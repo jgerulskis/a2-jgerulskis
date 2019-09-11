@@ -34,15 +34,21 @@ const handlePost = function( request, response ) {
   request.on( 'end', function() {
     console.log("Server received\n" + dataString);
     const obj = JSON.parse(dataString);
+    let url;
 
     if (obj.type != null && obj.type === "update") {
       FileManager.updateEventAvailibilty(obj.eventID, obj.availability, obj.name);
     }
     else if (PostValidation.validate(obj)) {
-      FileManager.saveJSON(obj)
+      url = FileManager.saveJSON(obj)
     }
-
+    console.log(url);
+    if (url !== undefined) {
+      response.body = { "eventURL": "/viewEvent.html?" + url};
+      console.log(response.body.eventURL + " is your response URL");
+    } 
     response.writeHead( 200, "OK", {'Content-Type': 'text/plain' })
+
     response.end()
   })
 }
@@ -113,6 +119,7 @@ const FileManager = {
       if (err) throw err;
     });
     console.log('Event saved to ' + './public/events/' + eventHash);
+    return eventHash;
   },
   converDayRangeToArray: function(dayRange) {
     var dates = [];

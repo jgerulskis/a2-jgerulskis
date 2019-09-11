@@ -65,7 +65,8 @@ const FormValidation = {
             method:'POST',
             body
         }).then( function( response ) {
-            console.log(response);
+            console.log("FIRE");
+            console.log(response.body);
         });
 
         return false;
