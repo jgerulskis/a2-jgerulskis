@@ -86,7 +86,9 @@ const EventDetails = {
     getDetails: function() {
         const URL = window.location.href;
         if (URL.indexOf("?") <= -1) {
-            console.log("Can't find params")
+            alert("Add event id >> /viewEvent.html?yourEventID")
+            const eventName = document.getElementById("eventName");
+            eventName.innerHTML = "Can't find this event, please ensure you entered the proper URL";
             return;
         } 
         const parsedURL = URL.split("?");
@@ -98,6 +100,10 @@ const EventDetails = {
         request.onreadystatechange = (e) => {
             if (request.readyState === 4 && request.status === 200) {
                 TableManager.createTable(request.responseText);
+            }
+            if (request.readyState === 4 && request.status === 404) {
+                console.log("not here")
+                alert("Can't find this event, please ensure you entered the proper URL")
             }
         }
     },
