@@ -18,7 +18,7 @@ input[type=text].eventCreationField {
 }
 
 input[type=text].eventCreationField::placeholder {
-    color: aqua;
+    color: #cecece;
 }
 
 button.submit {
