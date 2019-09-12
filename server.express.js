@@ -5,6 +5,7 @@ const http     = require('http'),
       fs       = require('fs'),
       mime     = require('mime'),
       moment   = require('moment'),
+      favicon  = require('serve-favicon'),
       dir      = '/public',
       port     = 3000,
       app      = express()
@@ -12,6 +13,7 @@ const http     = require('http'),
       database = low(adapter)
 
 app.use(express.static(__dirname + dir));
+app.use(favicon(__dirname + '/public/assets/favicon.ico'));
 database.defaults({events: [], count: 0}).write();
 
 app.all("*", function(req, res) {
@@ -162,5 +164,5 @@ const GarbageCollector = {
             .write();
     },
 }
-GarbageCollector.purge(); // Use middle ware to schedule a purge
+GarbageCollector.purge(); // TODO: Use middle ware to schedule a purge
 app.listen(port);
