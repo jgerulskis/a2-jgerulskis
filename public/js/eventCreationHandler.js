@@ -72,6 +72,7 @@ const FormValidation = {
     buildEventJSON: function() {
         const eventJSON = {
             "eventID": FormHandler.generateID(),
+            "password": document.getElementById("password").value,
             "eventName": document.getElementById("eventName").value,
             "potentialDates": document.getElementById("dateRange").value,
             "startTime": document.getElementById("startTime").value,

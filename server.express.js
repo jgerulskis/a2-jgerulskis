@@ -9,7 +9,7 @@ const http     = require('http'),
       dir      = '/public',
       port     = 3000,
       app      = express()
-      adapter  = new FileSync('public/events/eventExpirationData.json'),
+      adapter  = new FileSync('private/events/eventExpirationData.json'),
       database = low(adapter)
 
 app.use(express.static(__dirname + dir));
@@ -155,14 +155,27 @@ const GarbageCollector = {
             eventID: event.eventID,
             expirationDate: expiration.toDate()
         }).write();
-        console.log("Garbage Collector added an exiration date for " + event.eventName + " ( " + event.expiration.toDate() + " )");
     },
     purge: function() {
         const currentDate = moment(new Date());
         database.get('events')
-            .remove(event => currentDate.diff(moment(event.expirationDate)) >= 0)
-            .write();
+            .remove(event => {
+                if (currentDate.diff(moment(event.expirationDate)) >= 0) {
+                    this.delete(event.eventID);
+                    return true;
+                }
+                return false;
+            }).write();
     },
+    delete: function(eventID) {
+        const url = "./public/events/" + eventID + ".json";
+        fs.unlink(url, (err) => { // unlink == delete
+            if (err) throw err;
+            else {
+                console.log("expired event " + url + " was deleted");
+            }
+        })
+    }
 }
 GarbageCollector.purge(); // TODO: Use middle ware to schedule a purge
 app.listen(port);
