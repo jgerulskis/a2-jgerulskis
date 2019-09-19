@@ -6,16 +6,33 @@ const http     = require('http'),
       mime     = require('mime'),
       moment   = require('moment'),
       favicon  = require('serve-favicon'),
+      timeout  = require('connect-timeout'),
+      scheduler = require('node-schedule'),
       dir      = '/public',
       port     = 3000,
       app      = express()
       adapter  = new FileSync('private/events/eventExpirationData.json'),
       database = low(adapter)
 
+// Set up middleware
+app.use(timeout('5s'));
 app.use(express.static(__dirname + dir));
 app.use(favicon(__dirname + '/public/assets/favicon.ico'));
+app.use(haltOnTimeout)
+
+// Set up database
 database.defaults({events: [], count: 0}).write();
 
+// timeout handling
+function haltOnTimeout(req, res ,next) {
+    if (!req.timedout) {
+        next();
+    } else {
+        console.log("Request timeout!");
+    }
+}
+
+// Manage posts / get requests
 app.all("*", function(req, res) {
     if (req.method === "GET") {
         handleGet(req, res);
@@ -147,6 +164,19 @@ const FileManager = {
 }
 
 const GarbageCollector = {
+    setup: function() {
+        var schedule = require('node-schedule');
+ 
+        var rule = new schedule.RecurrenceRule();
+        rule.dayOfWeek = 0; // Every sunday
+        // Needs to be running to exec rule
+ 
+        return schedule.scheduleJob(rule, function() {
+            this.purge();
+            
+            console.log("Purge complete!");
+        }.bind(this));
+    },
     addEvent: function(event) {
         lastPotentialDate = event.potentialDates[event.potentialDates.length - 1];
         const expiration = moment(lastPotentialDate, "").startOf('day');
@@ -177,5 +207,6 @@ const GarbageCollector = {
         })
     }
 }
-GarbageCollector.purge(); // TODO: Use middle ware to schedule a purge
+
+const garbageCollectorScheduler = GarbageCollector.setup(); 
 app.listen(port);

@@ -1,1 +1,0 @@
-{"eventID":70447,"eventName":"testing","potentialDates":["2019-09-25T05:00:00.000Z","2019-09-26T05:00:00.000Z","2019-09-27T05:00:00.000Z"],"startTime":"10","endTime":"14","participants":[{"name":"jack","availability":[[2,0],[2,1],[4,1],[3,0],[3,1],[4,0]]},{"name":"jack 2","availability":[[1,2],[1,0],[2,0],[4,2]]}]}
